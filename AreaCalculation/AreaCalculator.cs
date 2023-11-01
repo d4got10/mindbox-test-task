@@ -15,6 +15,9 @@ public class AreaCalculator : IAreaCalculator
 
     public ErrorOr<double> CalculateArea<T>(T shape) where T : IShape
     {
+        if (shape == null)
+            return CreateNullArgumentError();
+        
         if (!IsSupported<T>())
             return CreateUnsupportedTypeError(typeof(T));
         
@@ -29,6 +32,9 @@ public class AreaCalculator : IAreaCalculator
 
     public ErrorOr<double> CalculateArea(IShape shape)
     {
+        if (shape == null)
+            return CreateNullArgumentError();
+        
         Type type = shape.GetType();
         if (!IsSupported(type))
             return CreateUnsupportedTypeError(type);
@@ -56,4 +62,7 @@ public class AreaCalculator : IAreaCalculator
 
     private static Error CreateUnsupportedTypeError(Type type) => 
         Error.Conflict(code: Errors.UnsupportedType, description: $"Type {type} is not supported by area calculator");
+    
+    private static Error CreateNullArgumentError() => 
+        Error.Conflict(code: Errors.NullArgument, description: "Argument was null");
 }

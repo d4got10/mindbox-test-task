@@ -25,6 +25,20 @@ public class AreaCalculatorGeneralTests
             Assert.That(result.FirstError.Code, Is.EqualTo(Errors.UnsupportedType), $"Error code should be \"{Errors.UnsupportedType}\"");
         });
     }
+    
+    [Test]
+    public void CalculateArea_GivenNull_ReturnUnsupportedTypeError()
+    {
+        IShape myShape = null;
+        ErrorOr<double> result = _areaCalculator.CalculateArea(myShape);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.IsError, Is.True, "null should not be supported");
+            Assert.That(result.FirstError.Code, Is.EqualTo(Errors.NullArgument), $"Error code should be \"{Errors.NullArgument}\"");
+        });
+    }
+
 
     private class MyShape : IShape
     {
