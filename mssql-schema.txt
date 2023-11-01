@@ -1,0 +1,41 @@
+-- Создаем таблицу категорий продуктов
+CREATE TABLE Categories (
+    CategoryID INT PRIMARY KEY,
+    CategoryName NVARCHAR(255) NOT NULL
+);
+
+-- Создаем таблицу продуктов
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName NVARCHAR(255) NOT NULL
+);
+
+-- Создаем таблицу связи продуктов с категориями
+CREATE TABLE ProductCategory (
+    ProductID INT,
+    CategoryID INT,
+    PRIMARY KEY (ProductID, CategoryID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+
+-- Вставляем категории продуктов
+INSERT INTO Categories (CategoryID, CategoryName)
+VALUES
+    (1, N'Электроника'),
+    (2, N'Одежда');
+
+-- Вставляем продукты
+INSERT INTO Products (ProductID, ProductName)
+VALUES
+    (1, N'Смартфон'),
+    (2, N'Ноутбук'),
+    (3, N'Футболка'),
+    (4, N'Холодильник');
+
+-- Создаем связи между продуктами и категориями
+INSERT INTO ProductCategory (ProductID, CategoryID)
+VALUES
+    (1, 1), -- Смартфон относится к категории "Электроника"
+    (2, 1), -- Ноутбук также относится к категории "Электроника"
+    (3, 2); -- Футболка относится к категории "Одежда"

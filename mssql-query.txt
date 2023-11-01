@@ -1,0 +1,8 @@
+SELECT P.ProductName, C.CategoryName
+FROM Products AS P
+LEFT JOIN ProductCategory AS PC ON P.ProductID = PC.ProductID
+LEFT JOIN Categories AS C ON PC.CategoryID = C.CategoryID
+-- Опционально можно добавить пагинацию
+ORDER BY P.ProductName
+OFFSET 0 ROWS
+FETCH NEXT 10 ROWS ONLY;
