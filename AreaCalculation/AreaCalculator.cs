@@ -5,8 +5,6 @@ using ErrorOr;
 
 namespace AreaCalculation;
 
-
-//Предполагается что фигуры не вырожденные (их площадь не равна 0)
 public class AreaCalculator : IAreaCalculator
 {
     protected readonly Dictionary<Type, ShapeSupport> ShapeSupports = new()
@@ -15,10 +13,10 @@ public class AreaCalculator : IAreaCalculator
         { typeof(Circle), new ShapeSupport { Validator = new CircleValidator(), CalculationStrategy = new CircleAreaCalculationStrategy() } },
     };
 
-    public ErrorOr<double> CalculateArea<T>(T shape)
+    public ErrorOr<double> CalculateArea<T>(T shape) where T : IShape
     {
         if (!IsSupported<T>())
-            return Error.Conflict(code: Errors.UnsupportedType, description: $"Type {typeof(T)} is not supported by area calculator");
+            return CreateUnsupportedTypeError(typeof(T));
         
         IShapeValidator<T> validator = GetValidator<T>();
         ErrorOr<Success> validationResult = validator.Validate(shape);
@@ -29,18 +27,33 @@ public class AreaCalculator : IAreaCalculator
         return calculationStrategy.Calculate(shape);
     }
 
-    private bool IsSupported<T>()
+    public ErrorOr<double> CalculateArea(IShape shape)
     {
-        return ShapeSupports.ContainsKey(typeof(T));
-    }
-    
-    private IShapeValidator<T> GetValidator<T>()
-    {
-        return (IShapeValidator<T>)ShapeSupports[typeof(T)].Validator;
+        Type type = shape.GetType();
+        if (!IsSupported(type))
+            return CreateUnsupportedTypeError(type);
+
+        IShapeValidator validator = GetValidator(type);
+        ErrorOr<Success> validationResult = validator.Validate(shape);
+        if (validationResult.IsError)
+            return validationResult.Errors;
+
+        IAreaCalculationStrategy calculationStrategy = GetCalculationStrategy(type);
+        return calculationStrategy.Calculate(shape);
     }
 
-    private IAreaCalculationStrategy<T> GetCalculationStrategy<T>()
-    {
-        return (IAreaCalculationStrategy<T>)ShapeSupports[typeof(T)].CalculationStrategy;
-    }
+    private bool IsSupported(Type type) => ShapeSupports.ContainsKey(type);
+
+    private bool IsSupported<T>() => IsSupported(typeof(T));
+
+    private IShapeValidator GetValidator(Type type) => ShapeSupports[type].Validator;
+
+    private IShapeValidator<T> GetValidator<T>() where T : IShape => (IShapeValidator<T>)GetValidator(typeof(T));
+
+    private IAreaCalculationStrategy GetCalculationStrategy(Type type) => ShapeSupports[type].CalculationStrategy;
+
+    private IAreaCalculationStrategy<T> GetCalculationStrategy<T>() where T : IShape => (IAreaCalculationStrategy<T>)GetCalculationStrategy(typeof(T));
+
+    private static Error CreateUnsupportedTypeError(Type type) => 
+        Error.Conflict(code: Errors.UnsupportedType, description: $"Type {type} is not supported by area calculator");
 }

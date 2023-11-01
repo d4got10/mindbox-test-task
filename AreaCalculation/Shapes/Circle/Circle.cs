@@ -1,6 +1,8 @@
-﻿namespace AreaCalculation.Shapes.Circle;
+﻿using AreaCalculation.Core;
 
-public readonly record struct Circle
+namespace AreaCalculation.Shapes.Circle;
+
+public readonly record struct Circle : IShape
 {
     public double Radius { get; init; }
 }

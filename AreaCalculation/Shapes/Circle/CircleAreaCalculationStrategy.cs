@@ -8,4 +8,6 @@ public class CircleAreaCalculationStrategy : IAreaCalculationStrategy<Circle>
     {
         return shape.Radius * shape.Radius * Math.PI;
     }
+
+    public double Calculate(IShape shape) => Calculate((Circle)shape);
 }

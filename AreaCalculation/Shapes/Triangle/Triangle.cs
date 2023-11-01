@@ -1,10 +1,8 @@
-﻿namespace AreaCalculation.Shapes.Triangle;
+﻿using AreaCalculation.Core;
 
-public readonly  struct Triangle
+namespace AreaCalculation.Shapes.Triangle;
+
+public readonly record struct Triangle() : IShape
 {
-    public Triangle()
-    {
-    }
-
     public double[] SideLengths { get; } = new double[3];
 }

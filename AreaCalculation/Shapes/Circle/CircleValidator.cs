@@ -12,4 +12,6 @@ public class CircleValidator : IShapeValidator<Circle>
         
         return Error.Validation(code: Errors.InvalidShape, description: "Circle radius must be greater than zero");
     }
+
+    public ErrorOr<Success> Validate(IShape shape) => Validate((Circle)shape);
 }

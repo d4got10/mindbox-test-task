@@ -20,6 +20,8 @@ public class TriangleAreaCalculationStrategy : IAreaCalculationStrategy<Triangle
         return CalculateForGenericTriangle(lengths);
     }
 
+    public double Calculate(IShape shape) => Calculate((Triangle)shape);
+
     private bool IsRightTriangle(double[] lengths)
     {
         double maxDifference = lengths[2] * lengths[2] * EqualityCheckPrecision;
@@ -27,7 +29,7 @@ public class TriangleAreaCalculationStrategy : IAreaCalculationStrategy<Triangle
 
         return Math.Abs(squareDifference) < maxDifference;
     }
-    
+
     private double CalculateForRightTriangle(double[] lengths)
     {
         return 0.5 * lengths[0] * lengths[1];

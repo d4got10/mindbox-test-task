@@ -1,3 +1,4 @@
+using AreaCalculation.Core;
 using ErrorOr;
 
 namespace AreaCalculation.Tests;
@@ -15,7 +16,7 @@ public class AreaCalculatorGeneralTests
     [Test]
     public void CalculateArea_GivenUnsupportedType_ReturnUnsupportedTypeError()
     {
-        var myShape = new MyShape();
+        IShape myShape = new MyShape();
         ErrorOr<double> result = _areaCalculator.CalculateArea(myShape);
         
         Assert.Multiple(() =>
@@ -25,7 +26,7 @@ public class AreaCalculatorGeneralTests
         });
     }
 
-    private class MyShape
+    private class MyShape : IShape
     {
     }
 }

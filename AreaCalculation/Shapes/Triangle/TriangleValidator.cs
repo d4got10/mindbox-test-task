@@ -24,4 +24,6 @@ public class TriangleValidator : IShapeValidator<Triangle>
         
         return Error.Validation(code: Errors.InvalidShape, description: "Triangle inequality must be satisfied");
     }
+
+    public ErrorOr<Success> Validate(IShape shape) => Validate((Triangle)shape);
 }

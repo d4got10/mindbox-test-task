@@ -1,4 +1,5 @@
 ﻿using AreaCalculation;
+using AreaCalculation.Core;
 using AreaCalculation.Shapes.Circle;
 using AreaCalculation.Shapes.Triangle;
 using ErrorOr;
@@ -6,7 +7,7 @@ using ErrorOr;
 var areaCalculator = new AreaCalculator();
 
 Console.WriteLine("Enter triangle side lengths:");
-var triangle = new Triangle
+IShape shape = new Triangle
 {
     SideLengths =
     {
@@ -15,7 +16,7 @@ var triangle = new Triangle
         [2] = double.Parse(Console.ReadLine()!),
     }
 };
-ErrorOr<double> errorOrTriangleArea = areaCalculator.CalculateArea(triangle);
+ErrorOr<double> errorOrTriangleArea = areaCalculator.CalculateArea(shape);
 if (errorOrTriangleArea.IsError)
 {
     Error error = errorOrTriangleArea.FirstError;
@@ -28,11 +29,11 @@ else
 }
 
 Console.WriteLine("Enter circle radius:");
-var circle = new Circle
+shape = new Circle
 {
     Radius = double.Parse(Console.ReadLine()!)
 };
-ErrorOr<double> errorOrCircleArea = areaCalculator.CalculateArea(circle);
+ErrorOr<double> errorOrCircleArea = areaCalculator.CalculateArea(shape);
 if (errorOrCircleArea.IsError)
 {
     Error error = errorOrCircleArea.FirstError;
